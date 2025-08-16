@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,22 +24,53 @@ public class Glendon {
                     Task task = tasks.get(i);
                     System.out.println((i + 1) + "." + task);
                 }
-            } else if (input.split(" ")[0].equals("mark") || input.split(" ")[0].equals("unmark")) {
+                continue;
+            }
+
+            String command = input.split(" ")[0];
+
+            if (command.equals("mark") || command.equals("unmark")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                String command = input.split(" ")[0];
                 Task task = tasks.get(index);
                 if (command.equals("mark")) {
                     task.mark();
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println(task);
-                } else if (command.equals("unmark")) {
+                } else {
                     task.unmark();
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println(task);
                 }
             } else {
-                tasks.add(new Task(input));
-                System.out.println("added: " + input);
+                Task task = null;
+                String description;
+                String[] segments;
+                switch (command) {
+                    case "todo":
+                        segments = input.split(" ");
+                        description = String.join(" ",
+                                Arrays.copyOfRange(segments, 1, segments.length));
+                        task = new ToDo(description);
+                        break;
+                    case "deadline":
+                        segments = input.split("\\s*(deadline |/by )\\s*");
+                        description = segments[1];
+                        String date = segments[2];
+                        task = new Deadline(description, date);
+                        break;
+                    case "event":
+                        segments = input.split("\\s*(event |/from |/to )\\s*");
+                        description = segments[1];
+                        String from = segments[2];
+                        String to = segments[3];
+                        task = new Event(description, from, to);
+                        break;
+                }
+
+                tasks.add(task);
+                System.out.println("Got it. I've added this task:");
+                System.out.println(task);
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             }
         }
 
