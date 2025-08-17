@@ -22,7 +22,7 @@ public class Glendon {
                 case "bye":
                     System.out.println("Bye. Hope to see you again soon!");
                     scanner.close();
-                    break;
+                    return;
                 case "list":
                     handleList();
                     break;
@@ -31,6 +31,9 @@ public class Glendon {
                     break;
                 case "unmark":
                     handleUnmark(Integer.parseInt(input.split(" ")[1]) - 1);
+                    break;
+                case "delete":
+                    handleDelete(Integer.parseInt(input.split(" ")[1]) - 1);
                     break;
                 case "todo":
                 case "deadline":
@@ -62,6 +65,14 @@ public class Glendon {
         task.unmark();
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println(task);
+    }
+
+    private static void handleDelete(int index) {
+        Task deletedTask = tasks.get(index);
+        tasks.remove(index);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println(deletedTask);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
     private static void handleAddTask(String input, String command) throws GlendonException {
