@@ -1,0 +1,11 @@
+deadline cs2103 ip tasks /by next fri
+todo study japanese
+list
+event student life fair /from 13 Aug /to 14 Aug
+mark 2
+list
+mark 3
+list
+unmark 3
+list
+bye
