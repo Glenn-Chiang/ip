@@ -8,6 +8,23 @@ public class Glendon {
     private static String name = "Glendon";
     private static List<Task> tasks = new ArrayList<>();
 
+    private enum Command {
+        BYE("bye"),
+        LIST("list"),
+        MARK("mark"),
+        UNMARK("unmark"),
+        DELETE("delete"),
+        TODO("todo"),
+        DEADLINE("deadline"),
+        EVENT("event");
+
+        public final String keyword;
+
+        Command(String keyword) {
+            this.keyword = keyword;
+        }
+    }
+
     public static void main(String[] args) throws GlendonException {
         Scanner scanner = new Scanner(System.in);
 
@@ -16,29 +33,37 @@ public class Glendon {
 
         while (true) {
             String input = scanner.nextLine();
-            String command = input.split(" ")[0];
+            String commandKeyword = input.split(" ")[0];
+            Command command = Arrays.stream(Command.values())
+                    .filter(cmd -> cmd.keyword.equals(commandKeyword))
+                    .findFirst()
+                    .orElse(null);
 
+            if (command == null) {
+                throw new GlendonException("Unknown command");
+            }
+            
             switch (command) {
-                case "bye":
+                case BYE:
                     System.out.println("Bye. Hope to see you again soon!");
                     scanner.close();
                     return;
-                case "list":
+                case LIST:
                     handleList();
                     break;
-                case "mark":
+                case MARK:
                     handleMark(Integer.parseInt(input.split(" ")[1]) - 1);
                     break;
-                case "unmark":
+                case UNMARK:
                     handleUnmark(Integer.parseInt(input.split(" ")[1]) - 1);
                     break;
-                case "delete":
+                case DELETE:
                     handleDelete(Integer.parseInt(input.split(" ")[1]) - 1);
                     break;
-                case "todo":
-                case "deadline":
-                case "event":
-                    handleAddTask(input, command);
+                case TODO:
+                case DEADLINE:
+                case EVENT:
+                    handleAddTask(input, commandKeyword);
                     break;
                 default:
                     throw new GlendonException("Unknown command");
