@@ -1,7 +1,10 @@
 public class Deadline extends Task {
     private String date;
-    public Deadline(String description, String date) {
+    public Deadline(String description, String date) throws GlendonException {
         super(description);
+        if (date == null || date.isBlank()) {
+            throw new GlendonException("Deadline date is required");
+        }
         this.date = date;
     }
 

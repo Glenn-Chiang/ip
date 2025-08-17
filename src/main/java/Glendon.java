@@ -2,12 +2,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Glendon {
     private static String name = "Glendon";
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GlendonException {
         Scanner scanner = new Scanner(System.in);
         List<Task> tasks = new ArrayList<>();
 
@@ -41,40 +41,69 @@ public class Glendon {
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println(task);
                 }
-            } else {
-                Task task = null;
-                String description;
-                String[] segments;
-                switch (command) {
-                    case "todo":
-                        segments = input.split(" ");
-                        description = String.join(" ",
-                                Arrays.copyOfRange(segments, 1, segments.length));
-                        task = new ToDo(description);
-                        break;
-                    case "deadline":
-                        segments = input.split("\\s*(deadline |/by )\\s*");
-                        description = segments[1];
-                        String date = segments[2];
-                        task = new Deadline(description, date);
-                        break;
-                    case "event":
-                        segments = input.split("\\s*(event |/from |/to )\\s*");
-                        description = segments[1];
-                        String from = segments[2];
-                        String to = segments[3];
-                        task = new Event(description, from, to);
-                        break;
-                }
-
-                tasks.add(task);
-                System.out.println("Got it. I've added this task:");
-                System.out.println(task);
-                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                continue;
             }
+
+            Task task = null;
+            String description;
+            String[] segments;
+            switch (command) {
+                case "todo":
+                    if (!validateTodoInput(input)) {
+                        throw new GlendonException("Invalid todo format");
+                    }
+                    segments = input.split(" ");
+                    description = String.join(" ",
+                            Arrays.copyOfRange(input.split(" "), 1, segments.length));
+                    task = new ToDo(description);
+                    break;
+                case "deadline":
+                    if (!validateDeadlineInput(input)) {
+                        throw new GlendonException("Invalid deadline format");
+                    }
+                    segments = input.split("\\s*(deadline |/by )\\s*");
+                    description = segments[1];
+                    String date = segments[2];
+                    task = new Deadline(description, date);
+                    break;
+                case "event":
+                    if (!validateEventInput(input)) {
+                        throw new GlendonException("Invalid event format");
+                    }
+                    segments = input.split("\\s*(event |/from |/to )\\s*");
+                    description = segments[1];
+                    String from = segments[2];
+                    String to = segments[3];
+                    task = new Event(description, from, to);
+                    break;
+                default:
+                    throw new GlendonException("Unknown command");
+            }
+
+            tasks.add(task);
+            System.out.println("Got it. I've added this task:");
+            System.out.println(task);
+            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+
         }
 
         System.out.println("Bye. Hope to see you again soon!");
         scanner.close();
+    }
+
+    private static boolean validateInput(Pattern pattern, String input) {
+        return pattern.matcher(input).matches();
+    }
+
+    private static boolean validateTodoInput(String input) {
+        return validateInput(Pattern.compile("^todo\\s+.+$"), input);
+    }
+
+    private static boolean validateDeadlineInput(String input) {
+        return validateInput(Pattern.compile("^deadline\\s+.+\\s+/by\\s+.+$"), input);
+    }
+
+    private static boolean validateEventInput(String input) {
+        return validateInput(Pattern.compile("^event\\s+.+\\s+/from\\s+.+\\s+/to\\s+.+$"), input);
     }
 }

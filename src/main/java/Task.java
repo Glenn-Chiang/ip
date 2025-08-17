@@ -1,8 +1,11 @@
 public abstract class Task {
-    private String description;
+    private final String description;
     private boolean isDone;
 
-    public Task(String description) {
+    public Task(String description) throws GlendonException {
+        if (description == null || description.isBlank()) {
+            throw new GlendonException("Description is required");
+        }
         this.description = description;
         this.isDone = false;
     }
