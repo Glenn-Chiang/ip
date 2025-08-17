@@ -6,89 +6,104 @@ import java.util.regex.Pattern;
 
 public class Glendon {
     private static String name = "Glendon";
+    private static List<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) throws GlendonException {
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
 
         System.out.println("Hello! I'm " + Glendon.name);
         System.out.println("What can I do for you?");
 
         while (true) {
             String input = scanner.nextLine();
-            if (input.equals("bye")) {
-                break;
-            }
-            if (input.equals("list")) {
-                for (int i = 0; i < tasks.size(); i++) {
-                    Task task = tasks.get(i);
-                    System.out.println((i + 1) + "." + task);
-                }
-                continue;
-            }
-
             String command = input.split(" ")[0];
 
-            if (command.equals("mark") || command.equals("unmark")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                Task task = tasks.get(index);
-                if (command.equals("mark")) {
-                    task.mark();
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println(task);
-                } else {
-                    task.unmark();
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println(task);
-                }
-                continue;
-            }
-
-            Task task = null;
-            String description;
-            String[] segments;
             switch (command) {
+                case "bye":
+                    System.out.println("Bye. Hope to see you again soon!");
+                    scanner.close();
+                    break;
+                case "list":
+                    handleList();
+                    break;
+                case "mark":
+                    handleMark(Integer.parseInt(input.split(" ")[1]) - 1);
+                    break;
+                case "unmark":
+                    handleUnmark(Integer.parseInt(input.split(" ")[1]) - 1);
+                    break;
                 case "todo":
-                    if (!validateTodoInput(input)) {
-                        throw new GlendonException("Invalid todo format");
-                    }
-                    segments = input.split(" ");
-                    description = String.join(" ",
-                            Arrays.copyOfRange(input.split(" "), 1, segments.length));
-                    task = new ToDo(description);
-                    break;
                 case "deadline":
-                    if (!validateDeadlineInput(input)) {
-                        throw new GlendonException("Invalid deadline format");
-                    }
-                    segments = input.split("\\s*(deadline |/by )\\s*");
-                    description = segments[1];
-                    String date = segments[2];
-                    task = new Deadline(description, date);
-                    break;
                 case "event":
-                    if (!validateEventInput(input)) {
-                        throw new GlendonException("Invalid event format");
-                    }
-                    segments = input.split("\\s*(event |/from |/to )\\s*");
-                    description = segments[1];
-                    String from = segments[2];
-                    String to = segments[3];
-                    task = new Event(description, from, to);
+                    handleAddTask(input, command);
                     break;
                 default:
                     throw new GlendonException("Unknown command");
             }
+        }
+    }
 
-            tasks.add(task);
-            System.out.println("Got it. I've added this task:");
-            System.out.println(task);
-            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+    private static void handleList() {
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            System.out.println((i + 1) + "." + task);
+        }
+    }
+
+    private static void handleMark(int index) {
+        Task task = tasks.get(index);
+        task.mark();
+        System.out.println("Nice! I've marked this task as done:");
+        System.out.println(task);
+    }
+
+    private static void handleUnmark(int index) {
+        Task task = tasks.get(index);
+        task.unmark();
+        System.out.println("OK, I've marked this task as not done yet:");
+        System.out.println(task);
+    }
+
+    private static void handleAddTask(String input, String command) throws GlendonException {
+        Task task = null;
+        String description;
+        String[] segments;
+        switch (command) {
+            case "todo":
+                if (!validateTodoInput(input)) {
+                    throw new GlendonException("Invalid todo format");
+                }
+                segments = input.split(" ");
+                description = String.join(" ",
+                        Arrays.copyOfRange(input.split(" "), 1, segments.length));
+                task = new ToDo(description);
+                break;
+            case "deadline":
+                if (!validateDeadlineInput(input)) {
+                    throw new GlendonException("Invalid deadline format");
+                }
+                segments = input.split("\\s*(deadline |/by )\\s*");
+                description = segments[1];
+                String date = segments[2];
+                task = new Deadline(description, date);
+                break;
+            case "event":
+                if (!validateEventInput(input)) {
+                    throw new GlendonException("Invalid event format");
+                }
+                segments = input.split("\\s*(event |/from |/to )\\s*");
+                description = segments[1];
+                String from = segments[2];
+                String to = segments[3];
+                task = new Event(description, from, to);
+                break;
 
         }
 
-        System.out.println("Bye. Hope to see you again soon!");
-        scanner.close();
+        tasks.add(task);
+        System.out.println("Got it. I've added this task:");
+        System.out.println(task);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
     private static boolean validateInput(Pattern pattern, String input) {
