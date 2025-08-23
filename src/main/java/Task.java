@@ -13,6 +13,13 @@ public abstract class Task {
     private String getStatusIcon() {
         return this.isDone ? "X" : " ";
     }
+    public boolean getStatus() {
+        return this.isDone;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
 
     public void mark() {
         this.isDone = true;
@@ -26,4 +33,6 @@ public abstract class Task {
     public String toString() {
         return "[" + this.getStatusIcon() + "] " + this.description;
     }
+
+    public abstract String toPersistenceString();
 }

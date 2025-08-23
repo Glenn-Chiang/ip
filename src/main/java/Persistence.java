@@ -37,14 +37,37 @@ public class Persistence {
         }
     }
 
-    private Task taskFromString(String str) throws GlendonException {
-        // TODO:
-        return null;
-    }
+    private static Task taskFromString(String str) throws GlendonException {
+        String[] components = str.split(" \\| "); // split on " | "
+        String status = components[1];
+        String description = components[2];
 
-    private String taskToString(String str) {
-        //TODO:
-        return "";
+        Task task = null;
+        switch (components.length) {
+        case 3:
+            // Todo
+            task = new ToDo(description);
+            break;
+        case 4:
+            // Deadline
+            String date = components[3];
+            task = new Deadline(description, date);
+            break;
+        case 5:
+            // Event
+            String start = components[3];
+            String end = components[4];
+            task = new Event(description, start, end);
+            break;
+        default:
+            throw new GlendonException("Malformed task");
+        }
+        if (status.equals("1")) {
+            task.mark();
+        } else if (!status.equals("0")) {
+            throw new GlendonException("Invalid status");
+        }
+        return task;
     }
 
     public void saveTasks(List<Task> tasks) throws GlendonException {
@@ -54,7 +77,7 @@ public class Persistence {
             try (FileWriter writer = new FileWriter(path.toFile())) {
                 int numTasks = tasks.size();
                 for (int i = 0; i < numTasks; i++) {
-                    writer.write(tasks.get(i).toString());
+                    writer.write(tasks.get(i).toPersistenceString());
                     if (i < numTasks - 1) {
                         writer.write(System.lineSeparator());
                     }
@@ -63,5 +86,32 @@ public class Persistence {
         } catch (IOException err) {
             throw new GlendonException("Error writing tasks to file: " + err);
         }
+    }
+
+    private static String statusToString(boolean status) {
+        return status ? "1" : "0";
+    }
+
+    public static String stringifyTodo(ToDo todo) {
+        return "T | " + statusToString(todo.getStatus()) + " | " + todo.getDescription();
+    }
+
+    public static String stringifyDeadline(Deadline deadline) {
+        List<String> components = new ArrayList<>();
+        components.add("D");
+        components.add(statusToString(deadline.getStatus()));
+        components.add(deadline.getDescription());
+        components.add(deadline.getDate());
+        return String.join(" | ", components);
+    }
+
+    public static String stringifyEvent(Event event) {
+        List<String> components = new ArrayList<>();
+        components.add("E");
+        components.add(statusToString(event.getStatus()));
+        components.add(event.getDescription());
+        components.add(event.getStart());
+        components.add(event.getEnd());
+        return String.join(" | ", components);
     }
 }
