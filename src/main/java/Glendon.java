@@ -25,8 +25,18 @@ public class Glendon {
         }
     }
 
+    private static final String tasksDataPath = "./data/tasks.txt";
+
+    private static final Persistence persistence = new Persistence(tasksDataPath);
+
     public static void main(String[] args) throws GlendonException {
         Scanner scanner = new Scanner(System.in);
+
+        try {
+            Glendon.tasks = Glendon.persistence.loadTasks();
+        } catch (GlendonException err) {
+            throw new GlendonException("Error loading tasks: " + err);
+        }
 
         System.out.println("Hello! I'm " + Glendon.name);
         System.out.println("What can I do for you?");
@@ -42,33 +52,41 @@ public class Glendon {
             if (command == null) {
                 throw new GlendonException("Unknown command");
             }
-            
+
             switch (command) {
-                case BYE:
-                    System.out.println("Bye. Hope to see you again soon!");
-                    scanner.close();
-                    return;
-                case LIST:
-                    handleList();
-                    break;
-                case MARK:
-                    handleMark(Integer.parseInt(input.split(" ")[1]) - 1);
-                    break;
-                case UNMARK:
-                    handleUnmark(Integer.parseInt(input.split(" ")[1]) - 1);
-                    break;
-                case DELETE:
-                    handleDelete(Integer.parseInt(input.split(" ")[1]) - 1);
-                    break;
-                case TODO:
-                case DEADLINE:
-                case EVENT:
-                    handleAddTask(input, commandKeyword);
-                    break;
-                default:
-                    throw new GlendonException("Unknown command");
+            case BYE:
+                System.out.println("Bye. Hope to see you again soon!");
+                scanner.close();
+                return;
+            case LIST:
+                handleList();
+                break;
+            case MARK:
+                handleMark(Integer.parseInt(input.split(" ")[1]) - 1);
+                saveTasks();
+                break;
+            case UNMARK:
+                handleUnmark(Integer.parseInt(input.split(" ")[1]) - 1);
+                saveTasks();
+                break;
+            case DELETE:
+                handleDelete(Integer.parseInt(input.split(" ")[1]) - 1);
+                saveTasks();
+                break;
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                handleAddTask(input);
+                saveTasks();
+                break;
+            default:
+                throw new GlendonException("Unknown command");
             }
         }
+    }
+
+    private static void saveTasks() throws GlendonException {
+        Glendon.persistence.saveTasks(Glendon.tasks);
     }
 
     private static void handleList() {
@@ -100,46 +118,52 @@ public class Glendon {
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    private static void handleAddTask(String input, String command) throws GlendonException {
-        Task task = null;
-        String description;
-        String[] segments;
-        switch (command) {
-            case "todo":
-                if (!validateTodoInput(input)) {
-                    throw new GlendonException("Invalid todo format");
-                }
-                segments = input.split(" ");
-                description = String.join(" ",
-                        Arrays.copyOfRange(input.split(" "), 1, segments.length));
-                task = new ToDo(description);
-                break;
-            case "deadline":
-                if (!validateDeadlineInput(input)) {
-                    throw new GlendonException("Invalid deadline format");
-                }
-                segments = input.split("\\s*(deadline |/by )\\s*");
-                description = segments[1];
-                String date = segments[2];
-                task = new Deadline(description, date);
-                break;
-            case "event":
-                if (!validateEventInput(input)) {
-                    throw new GlendonException("Invalid event format");
-                }
-                segments = input.split("\\s*(event |/from |/to )\\s*");
-                description = segments[1];
-                String from = segments[2];
-                String to = segments[3];
-                task = new Event(description, from, to);
-                break;
-
-        }
-
+    private static void handleAddTask(String input) throws GlendonException {
+        Task task = taskFromString(input);
         tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println(task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    private static Task taskFromString(String str) throws GlendonException {
+        Task task = null;
+        String taskType = str.split(" ")[0];
+        String description;
+        String[] segments;
+        switch (taskType) {
+        case "todo":
+            if (!validateTodoInput(str)) {
+                throw new GlendonException("Invalid todo format");
+            }
+            segments = str.split(" ");
+            description = String.join(" ",
+                    Arrays.copyOfRange(str.split(" "), 1, segments.length));
+            task = new ToDo(description);
+            break;
+        case "deadline":
+            if (!validateDeadlineInput(str)) {
+                throw new GlendonException("Invalid deadline format");
+            }
+            segments = str.split("\\s*(deadline |/by )\\s*");
+            description = segments[1];
+            String date = segments[2];
+            task = new Deadline(description, date);
+            break;
+        case "event":
+            if (!validateEventInput(str)) {
+                throw new GlendonException("Invalid event format");
+            }
+            segments = str.split("\\s*(event |/from |/to )\\s*");
+            description = segments[1];
+            String from = segments[2];
+            String to = segments[3];
+            task = new Event(description, from, to);
+            break;
+        default:
+            throw new GlendonException("Invalid task format");
+        }
+        return task;
     }
 
     private static boolean validateInput(Pattern pattern, String input) {
