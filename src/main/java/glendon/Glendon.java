@@ -1,7 +1,11 @@
+package glendon;
+
+import glendon.task.Task;
+
 import java.util.Scanner;
 
 public class Glendon {
-    private static final String name = "Glendon";
+    private static final String name = "glendon.Glendon";
 
     public enum Command {
         BYE("bye"),

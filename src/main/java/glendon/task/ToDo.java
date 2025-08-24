@@ -1,3 +1,8 @@
+package glendon.task;
+
+import glendon.GlendonException;
+import glendon.Storage;
+
 public class ToDo extends Task {
     public ToDo(String description) throws GlendonException {
         super(description);

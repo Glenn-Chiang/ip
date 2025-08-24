@@ -1,3 +1,10 @@
+package glendon;
+
+import glendon.task.Deadline;
+import glendon.task.Event;
+import glendon.task.Task;
+import glendon.task.ToDo;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -54,13 +61,13 @@ public class Storage {
             task = new ToDo(description);
             break;
         case 4:
-            // Deadline
+            // glendon.task.Deadline
             String dateStr = components[3];
             LocalDate date = LocalDate.parse(dateStr, dateFormat);
             task = new Deadline(description, date);
             break;
         case 5:
-            // Event
+            // glendon.task.Event
             String startStr = components[3];
             String endStr = components[4];
             LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
