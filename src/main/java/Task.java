@@ -13,10 +13,12 @@ public abstract class Task {
     private String getStatusIcon() {
         return this.isDone ? "X" : " ";
     }
+    public boolean getStatus() {
+        return this.isDone;
+    }
 
-    @Override
-    public String toString() {
-        return "[" + this.getStatusIcon() + "] " + this.description;
+    public String getDescription() {
+        return this.description;
     }
 
     public void mark() {
@@ -26,4 +28,11 @@ public abstract class Task {
     public void unmark() {
         this.isDone = false;
     }
+
+    @Override
+    public String toString() {
+        return "[" + this.getStatusIcon() + "] " + this.description;
+    }
+
+    public abstract String toPersistenceString();
 }

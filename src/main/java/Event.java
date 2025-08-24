@@ -1,6 +1,6 @@
 public class Event extends Task {
-    private String from;
-    private String to;
+    private final String start;
+    private final String end;
 
     public Event(String description, String from, String to) throws GlendonException {
         super(description);
@@ -10,12 +10,25 @@ public class Event extends Task {
         if (to == null || to.isBlank()) {
             throw new GlendonException("Event end time is required");
         }
-        this.from = from;
-        this.to = to;
+        this.start = from;
+        this.end = to;
+    }
+
+    public String getStart() {
+        return this.start;
+    }
+
+    public String getEnd() {
+        return this.end;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + this.from + " to: " + this.to + ")";
+        return "[E]" + super.toString() + " (from: " + this.start + " to: " + this.end + ")";
+    }
+
+    @Override
+    public String toPersistenceString() {
+        return Persistence.stringifyEvent(this);
     }
 }
