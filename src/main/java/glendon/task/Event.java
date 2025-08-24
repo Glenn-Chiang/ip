@@ -31,6 +31,9 @@ public class Event extends Task {
                 this.end.format(dateTimeFormat) + ")";
     }
 
+    /**
+     * Converts the Event into a string format for file storage.
+     */
     @Override
     public String toStorageString() {
         return Storage.serializeEvent(this);

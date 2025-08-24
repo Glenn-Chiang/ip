@@ -13,6 +13,9 @@ public class ToDo extends Task {
         return "[T]" + super.toString();
     }
 
+    /**
+     * Converts the ToDo into a string format for file storage.
+     */
     @Override
     public String toStorageString() {
         return Storage.serializeTodo(this);

@@ -16,6 +16,9 @@ public class Parser {
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
+    /**
+     * Extracts and returns the type of command from the input string.
+     */
     public static Glendon.Command parseCommand(String input) {
         String commandKeyword = input.split(" ")[0];
         return Arrays.stream(Glendon.Command.values())
@@ -24,10 +27,18 @@ public class Parser {
                 .orElse(null);
     }
 
+    /**
+     * Extracts and returns the specified index from the input string.
+     * Commands MARK, UNMARK and DELETE require an index to be specified as the second argument in the input string.
+     */
     public static int parseIndex(String input) {
         return Integer.parseInt(input.split(" ")[1]) - 1;
     }
 
+    /**
+     * Parses the input string into a Task and returns the Task.
+     * @throws GlendonException If input is invalid.
+     */
     public static Task parseTask(String input) throws GlendonException {
         Task task = null;
         String taskType = input.split(" ")[0];
