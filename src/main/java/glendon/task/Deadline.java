@@ -27,6 +27,9 @@ public class Deadline extends Task {
         return "[D]" + super.toString() + " (by: " + this.getFormattedDate() + ")";
     }
 
+    /**
+     * Converts the Deadline into a string format for file storage.
+     */
     @Override
     public String toStorageString() {
         return Storage.serializeDeadline(this);
