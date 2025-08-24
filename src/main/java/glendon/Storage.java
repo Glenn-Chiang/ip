@@ -27,6 +27,12 @@ public class Storage {
         this.dataPath = dataPath;
     }
 
+    /**
+     * Reads list of tasks from file and returns the list.
+     *
+     * @return Saved list of tasks, or empty list if no tasks were previously saved.
+     * @throws GlendonException If path of storage file is invalid or the file is in an invalid format.
+     */
     public List<Task> loadTasks() throws GlendonException {
         List<Task> tasks = new ArrayList<>();
         File file = new File(dataPath);
@@ -49,6 +55,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses string stored in file into a ToDo, Deadline or Event Task and returns the Task.
+     *
+     * @param str The string to be parsed.
+     * @throws GlendonException If string is not in a valid format.
+     */
     private static Task taskFromString(String str) throws GlendonException {
         String[] components = str.split(" \\| "); // split on " | "
         String status = components[1];
@@ -61,13 +73,13 @@ public class Storage {
             task = new ToDo(description);
             break;
         case 4:
-            // glendon.task.Deadline
+            // Deadline
             String dateStr = components[3];
             LocalDate date = LocalDate.parse(dateStr, dateFormat);
             task = new Deadline(description, date);
             break;
         case 5:
-            // glendon.task.Event
+            // Event
             String startStr = components[3];
             String endStr = components[4];
             LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
@@ -85,6 +97,12 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Writes the given list of tasks into storage file.
+     *
+     * @param tasks The list of tasks to be saved.
+     * @throws GlendonException If IO error occurs.
+     */
     public void saveTasks(List<Task> tasks) throws GlendonException {
         Path path = Path.of(dataPath);
         try {
@@ -103,14 +121,30 @@ public class Storage {
         }
     }
 
+    /**
+     * Converts the given boolean status into a string format to store in file.
+     *
+     * @param status Whether the task is done.
+     * @return 1 for true and 0 for false.
+     */
     private static String statusToString(boolean status) {
         return status ? "1" : "0";
     }
 
+    /**
+     * Converts a ToDo into a string format for file storage.
+     *
+     * @return The serialized ToDo.
+     */
     public static String serializeTodo(ToDo todo) {
         return "T | " + statusToString(todo.getStatus()) + " | " + todo.getDescription();
     }
 
+    /**
+     * Converts a Deadline into a string format for file storage.
+     *
+     * @return The serialized Deadline.
+     */
     public static String serializeDeadline(Deadline deadline) {
         List<String> components = new ArrayList<>();
         components.add("D");
@@ -120,6 +154,11 @@ public class Storage {
         return String.join(" | ", components);
     }
 
+    /**
+     * Converts an Event into a string format for file storage.
+     *
+     * @return The serialized Event.
+     */
     public static String serializeEvent(Event event) {
         List<String> components = new ArrayList<>();
         components.add("E");
