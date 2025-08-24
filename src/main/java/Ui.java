@@ -38,12 +38,12 @@ public class Ui {
     public static void displayTaskDeleted(Task deletedTask, List<Task> tasks) {
         System.out.println("Noted. I've removed this task:");
         System.out.println(deletedTask);
-        System.out.println("Now you have " + tasks + " tasks in the list.");
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
     public static void displayTaskAdded(Task task, List<Task> tasks) {
         System.out.println("Got it. I've added this task:");
         System.out.println(task);
-        System.out.println("Now you have " + tasks + " tasks in the list.");
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 }
