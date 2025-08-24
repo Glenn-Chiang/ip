@@ -1,6 +1,5 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class Event extends Task {
     private final LocalDateTime start;
@@ -29,6 +28,6 @@ public class Event extends Task {
 
     @Override
     public String toPersistenceString() {
-        return Persistence.stringifyEvent(this);
+        return Storage.stringifyEvent(this);
     }
 }

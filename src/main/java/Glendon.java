@@ -8,8 +8,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Glendon {
-    private static String name = "Glendon";
-    private static List<Task> tasks = new ArrayList<>();
+    private static final String name = "Glendon";
 
     private enum Command {
         BYE("bye"),
@@ -30,19 +29,23 @@ public class Glendon {
 
     private static final String tasksDataPath = "./data/tasks.txt";
 
-    private static final Persistence persistence = new Persistence(tasksDataPath);
-
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private final Storage storage;
+    private List<Task> tasks;
 
-    public static void main(String[] args) throws GlendonException {
-        Scanner scanner = new Scanner(System.in);
-
+    public Glendon(String storagePath) {
+        storage = new Storage(storagePath);
         try {
-            Glendon.tasks = Glendon.persistence.loadTasks();
+            this.tasks = this.storage.loadTasks();
         } catch (GlendonException err) {
-            throw new GlendonException("Error loading tasks: " + err);
+            System.out.println("Error loading tasks. Using empty task list.");
+            this.tasks = new ArrayList<>();
         }
+    }
+
+    public void run() throws GlendonException {
+        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Hello! I'm " + Glendon.name);
         System.out.println("What can I do for you?");
@@ -92,52 +95,56 @@ public class Glendon {
         }
     }
 
-    private static void saveTasks() throws GlendonException {
-        Glendon.persistence.saveTasks(Glendon.tasks);
+    public static void main(String[] args) throws GlendonException {
+       new Glendon(tasksDataPath).run();
     }
 
-    private static void handleList() {
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
+    private void saveTasks() throws GlendonException {
+        this.storage.saveTasks(this.tasks);
+    }
+
+    private void handleList() {
+        for (int i = 0; i < this.tasks.size(); i++) {
+            Task task = this.tasks.get(i);
             System.out.println((i + 1) + "." + task);
         }
     }
 
-    private static void handleMark(int index) {
-        Task task = tasks.get(index);
+    private void handleMark(int index) {
+        Task task = this.tasks.get(index);
         task.mark();
         System.out.println("Nice! I've marked this task as done:");
         System.out.println(task);
     }
 
-    private static void handleUnmark(int index) {
-        Task task = tasks.get(index);
+    private void handleUnmark(int index) {
+        Task task = this.tasks.get(index);
         task.unmark();
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println(task);
     }
 
-    private static void handleDelete(int index) {
-        Task deletedTask = tasks.get(index);
-        tasks.remove(index);
+    private void handleDelete(int index) {
+        Task deletedTask = this.tasks.get(index);
+        this.tasks.remove(index);
         System.out.println("Noted. I've removed this task:");
         System.out.println(deletedTask);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
     }
 
-    private static void handleAddTask(String input) throws GlendonException {
+    private void handleAddTask(String input) throws GlendonException {
         try {
             Task task = taskFromString(input);
-            tasks.add(task);
+            this.tasks.add(task);
             System.out.println("Got it. I've added this task:");
             System.out.println(task);
-            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+            System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
         } catch (GlendonException e) {
             System.out.println(e.toString());
         }
     }
 
-    private static Task taskFromString(String str) throws GlendonException {
+    private Task taskFromString(String str) throws GlendonException {
         Task task = null;
         String taskType = str.split(" ")[0];
         String description;
