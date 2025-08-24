@@ -1,15 +1,10 @@
 package glendon.task;
 
-import glendon.GlendonException;
-
 public abstract class Task {
     private final String description;
     private boolean isDone;
 
-    public Task(String description) throws GlendonException {
-        if (description == null || description.isBlank()) {
-            throw new GlendonException("Description is required");
-        }
+    public Task(String description) {
         this.description = description;
         this.isDone = false;
     }
@@ -38,5 +33,5 @@ public abstract class Task {
         return "[" + this.getStatusIcon() + "] " + this.description;
     }
 
-    public abstract String toPersistenceString();
+    public abstract String toStorageString();
 }

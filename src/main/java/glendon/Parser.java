@@ -8,6 +8,7 @@ import glendon.task.ToDo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -49,8 +50,12 @@ public class Parser {
             segments = input.split("\\s*(deadline |/by )\\s*");
             description = segments[1];
             String dateStr = segments[2];
-            LocalDate date = LocalDate.parse(dateStr, dateFormat);
-            task = new Deadline(description, date);
+            try {
+                LocalDate date = LocalDate.parse(dateStr, dateFormat);
+                task = new Deadline(description, date);
+            } catch (DateTimeParseException e) {
+                throw new GlendonException("Invalid deadline date format");
+            }
             break;
         case "event":
             if (!validateEventInput(input)) {
@@ -60,9 +65,13 @@ public class Parser {
             description = segments[1];
             String startStr = segments[2];
             String endStr = segments[3];
-            LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
-            LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
-            task = new Event(description, start, end);
+            try {
+                LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
+                LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
+                task = new Event(description, start, end);
+            } catch (DateTimeParseException e) {
+                throw new GlendonException("Invalid event start or end datetime format");
+            }
             break;
         default:
             throw new GlendonException("Invalid task format");
@@ -75,14 +84,14 @@ public class Parser {
     }
 
     private static boolean validateTodoInput(String input) {
-        return validateInput(Pattern.compile("^todo\\s+.+$"), input);
+        return validateInput(Pattern.compile("^todo\\s\\S.*$"), input);
     }
 
     private static boolean validateDeadlineInput(String input) {
-        return validateInput(Pattern.compile("^deadline\\s+.+\\s+/by\\s+.+$"), input);
+        return validateInput(Pattern.compile("^deadline\\s+\\S.*\\s+/by\\s+\\S.*$"), input);
     }
 
     private static boolean validateEventInput(String input) {
-        return validateInput(Pattern.compile("^event\\s+.+\\s+/from\\s+.+\\s+/to\\s+.+$"), input);
+        return validateInput(Pattern.compile("^event\\s+\\S.*\\s+/from\\s+\\S.*\\s+/to\\s+\\S.*$"), input);
     }
 }

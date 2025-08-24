@@ -32,7 +32,7 @@ public class Event extends Task {
     }
 
     @Override
-    public String toPersistenceString() {
-        return Storage.stringifyEvent(this);
+    public String toStorageString() {
+        return Storage.serializeEvent(this);
     }
 }

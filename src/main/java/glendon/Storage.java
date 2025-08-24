@@ -92,7 +92,7 @@ public class Storage {
             try (FileWriter writer = new FileWriter(path.toFile())) {
                 int numTasks = tasks.size();
                 for (int i = 0; i < numTasks; i++) {
-                    writer.write(tasks.get(i).toPersistenceString());
+                    writer.write(tasks.get(i).toStorageString());
                     if (i < numTasks - 1) {
                         writer.write(System.lineSeparator());
                     }
@@ -107,11 +107,11 @@ public class Storage {
         return status ? "1" : "0";
     }
 
-    public static String stringifyTodo(ToDo todo) {
+    public static String serializeTodo(ToDo todo) {
         return "T | " + statusToString(todo.getStatus()) + " | " + todo.getDescription();
     }
 
-    public static String stringifyDeadline(Deadline deadline) {
+    public static String serializeDeadline(Deadline deadline) {
         List<String> components = new ArrayList<>();
         components.add("D");
         components.add(statusToString(deadline.getStatus()));
@@ -120,7 +120,7 @@ public class Storage {
         return String.join(" | ", components);
     }
 
-    public static String stringifyEvent(Event event) {
+    public static String serializeEvent(Event event) {
         List<String> components = new ArrayList<>();
         components.add("E");
         components.add(statusToString(event.getStatus()));
