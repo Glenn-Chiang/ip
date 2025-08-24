@@ -4,12 +4,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Persistence {
     private final String dataPath;
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public Persistence(String dataPath) {
         this.dataPath = dataPath;
@@ -50,13 +55,16 @@ public class Persistence {
             break;
         case 4:
             // Deadline
-            String date = components[3];
+            String dateStr = components[3];
+            LocalDate date = LocalDate.parse(dateStr, dateFormat);
             task = new Deadline(description, date);
             break;
         case 5:
             // Event
-            String start = components[3];
-            String end = components[4];
+            String startStr = components[3];
+            String endStr = components[4];
+            LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
+            LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
             task = new Event(description, start, end);
             break;
         default:
@@ -101,7 +109,7 @@ public class Persistence {
         components.add("D");
         components.add(statusToString(deadline.getStatus()));
         components.add(deadline.getDescription());
-        components.add(deadline.getDate());
+        components.add(deadline.getDate().format(dateFormat));
         return String.join(" | ", components);
     }
 
@@ -110,8 +118,8 @@ public class Persistence {
         components.add("E");
         components.add(statusToString(event.getStatus()));
         components.add(event.getDescription());
-        components.add(event.getStart());
-        components.add(event.getEnd());
+        components.add(event.getStart().format(dateTimeFormat));
+        components.add(event.getEnd().format(dateTimeFormat));
         return String.join(" | ", components);
     }
 }
