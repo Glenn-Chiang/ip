@@ -1,9 +1,9 @@
 package glendon;
 
-import glendon.task.Task;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import glendon.task.Task;
 
 public class TaskList {
     private final List<Task> tasks;
@@ -43,9 +43,22 @@ public class TaskList {
     public Task deleteTask(int index) {
         Task deletedTask = this.tasks.get(index);
         this.tasks.remove(index);
-        System.out.println("Noted. I've removed this task:");
-        System.out.println(deletedTask);
-        System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
         return deletedTask;
+    }
+
+    /**
+     * Searches the task list for tasks whose description contains the given keyword, then returns those tasks.
+     *
+     * @param keyword The keyword to search for.
+     * @return The list of tasks whose description contains the given keyword.
+     */
+    public List<Task> findTask(String keyword) {
+        List<Task> results = new ArrayList<>();
+        for (Task task : this.tasks) {
+            if (task.getDescription().contains(keyword)) {
+                results.add(task);
+            }
+        }
+        return results;
     }
 }

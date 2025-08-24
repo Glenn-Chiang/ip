@@ -1,8 +1,9 @@
 package glendon;
 
-import glendon.task.Task;
-
+import java.util.List;
 import java.util.Scanner;
+
+import glendon.task.Task;
 
 public class Glendon {
 
@@ -14,7 +15,8 @@ public class Glendon {
         DELETE("delete"),
         TODO("todo"),
         DEADLINE("deadline"),
-        EVENT("event");
+        EVENT("event"),
+        FIND("find");
 
         public final String keyword;
 
@@ -78,6 +80,9 @@ public class Glendon {
                     handleAddTask(Parser.parseTask(input));
                     saveTasks();
                     break;
+                case FIND:
+                    handleFindTask(Parser.parseSearchKey(input));
+                    break;
                 default:
                     Ui.displayUnknown();
                 }
@@ -97,6 +102,21 @@ public class Glendon {
 
     private void handleListTasks() {
         Ui.displayTasks(this.taskList.getTasks());
+    }
+
+    /**
+     * Searches the task list for tasks whose description contains the given keyword, then prints those tasks.
+     *
+     * @param keyword The keyword to search for.
+     */
+    private void handleFindTask(String keyword) {
+        List<Task> results = this.taskList.findTask(keyword);
+        if (results.isEmpty()) {
+            Ui.display("No matches found");
+            return;
+        }
+        Ui.display("Here are the matching tasks in your list:");
+        Ui.displayTasks(results);
     }
 
     private void handleMarkTask(int index) {

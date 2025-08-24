@@ -1,16 +1,16 @@
 package glendon;
 
-import glendon.task.Deadline;
-import glendon.task.Event;
-import glendon.task.Task;
-import glendon.task.ToDo;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+
+import glendon.task.Deadline;
+import glendon.task.Event;
+import glendon.task.Task;
+import glendon.task.ToDo;
 
 public class Parser {
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -26,6 +26,17 @@ public class Parser {
 
     public static int parseIndex(String input) {
         return Integer.parseInt(input.split(" ")[1]) - 1;
+    }
+
+    /**
+     * Parses and returns the search key from the input string for a FIND command.
+     *
+     * @param input The full user input.
+     * @return The search key, which can be any number of words.
+     */
+    public static String parseSearchKey(String input) {
+        String[] segments = input.split(" ");
+        return String.join(" ", Arrays.copyOfRange(segments, 1, segments.length));
     }
 
     public static Task parseTask(String input) throws GlendonException {
