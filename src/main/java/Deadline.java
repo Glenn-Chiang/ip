@@ -1,7 +1,5 @@
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class Deadline extends Task {
     private final LocalDate date;
@@ -26,6 +24,6 @@ public class Deadline extends Task {
 
     @Override
     public String toPersistenceString() {
-        return Persistence.stringifyDeadline(this);
+        return Storage.stringifyDeadline(this);
     }
 }

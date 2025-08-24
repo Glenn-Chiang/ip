@@ -10,6 +10,6 @@ public class ToDo extends Task {
 
     @Override
     public String toPersistenceString() {
-        return Persistence.stringifyTodo(this);
+        return Storage.stringifyTodo(this);
     }
 }
