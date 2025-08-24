@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +32,9 @@ public class Glendon {
 
     private static final Persistence persistence = new Persistence(tasksDataPath);
 
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+
     public static void main(String[] args) throws GlendonException {
         Scanner scanner = new Scanner(System.in);
 
@@ -50,7 +56,8 @@ public class Glendon {
                     .orElse(null);
 
             if (command == null) {
-                throw new GlendonException("Unknown command");
+                System.out.println("Unknown command");
+                continue;
             }
 
             switch (command) {
@@ -80,7 +87,7 @@ public class Glendon {
                 saveTasks();
                 break;
             default:
-                throw new GlendonException("Unknown command");
+                System.out.println("Unknown command");
             }
         }
     }
@@ -119,11 +126,15 @@ public class Glendon {
     }
 
     private static void handleAddTask(String input) throws GlendonException {
-        Task task = taskFromString(input);
-        tasks.add(task);
-        System.out.println("Got it. I've added this task:");
-        System.out.println(task);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        try {
+            Task task = taskFromString(input);
+            tasks.add(task);
+            System.out.println("Got it. I've added this task:");
+            System.out.println(task);
+            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        } catch (GlendonException e) {
+            System.out.println(e.toString());
+        }
     }
 
     private static Task taskFromString(String str) throws GlendonException {
@@ -147,7 +158,8 @@ public class Glendon {
             }
             segments = str.split("\\s*(deadline |/by )\\s*");
             description = segments[1];
-            String date = segments[2];
+            String dateStr = segments[2];
+            LocalDate date = LocalDate.parse(dateStr, dateFormat);
             task = new Deadline(description, date);
             break;
         case "event":
@@ -156,9 +168,11 @@ public class Glendon {
             }
             segments = str.split("\\s*(event |/from |/to )\\s*");
             description = segments[1];
-            String from = segments[2];
-            String to = segments[3];
-            task = new Event(description, from, to);
+            String startStr = segments[2];
+            String endStr = segments[3];
+            LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
+            LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
+            task = new Event(description, start, end);
             break;
         default:
             throw new GlendonException("Invalid task format");

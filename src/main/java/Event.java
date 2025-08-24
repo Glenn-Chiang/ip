@@ -1,30 +1,30 @@
-public class Event extends Task {
-    private final String start;
-    private final String end;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-    public Event(String description, String from, String to) throws GlendonException {
+public class Event extends Task {
+    private final LocalDateTime start;
+    private final LocalDateTime end;
+    private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MMM d yyyy HHmm");
+
+    public Event(String description, LocalDateTime start, LocalDateTime end) throws GlendonException {
         super(description);
-        if (from == null || from.isBlank()) {
-            throw new GlendonException("Event start time is required");
-        }
-        if (to == null || to.isBlank()) {
-            throw new GlendonException("Event end time is required");
-        }
-        this.start = from;
-        this.end = to;
+        this.start = start;
+        this.end = end;
     }
 
-    public String getStart() {
+    public LocalDateTime getStart() {
         return this.start;
     }
 
-    public String getEnd() {
+    public LocalDateTime getEnd() {
         return this.end;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + this.start + " to: " + this.end + ")";
+        return "[E]" + super.toString() + " (from: " + this.start.format(dateTimeFormat) + " to: " +
+                this.end.format(dateTimeFormat) + ")";
     }
 
     @Override

@@ -1,20 +1,27 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Deadline extends Task {
-    private String date;
-    public Deadline(String description, String date) throws GlendonException {
+    private final LocalDate date;
+    public Deadline(String description, LocalDate date) throws GlendonException {
         super(description);
-        if (date == null || date.isBlank()) {
-            throw new GlendonException("Deadline date is required");
-        }
         this.date = date;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return this.date;
+    }
+
+    private String getFormattedDate() {
+
+        return this.date.format(DateTimeFormatter.ofPattern("MMM d yyyy"));
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + this.date + ")";
+        return "[D]" + super.toString() + " (by: " + this.getFormattedDate() + ")";
     }
 
     @Override
