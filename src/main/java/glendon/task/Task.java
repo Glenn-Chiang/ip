@@ -1,3 +1,7 @@
+package glendon.task;
+
+import glendon.GlendonException;
+
 public abstract class Task {
     private final String description;
     private boolean isDone;

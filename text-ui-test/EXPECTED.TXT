@@ -1,4 +1,4 @@
-Hello! I'm Glendon
+Hello! I'm glendon.Glendon
 What can I do for you?
 Got it. I've added this task:
 [D][ ] cs2103 ip tasks (by: next fri)
