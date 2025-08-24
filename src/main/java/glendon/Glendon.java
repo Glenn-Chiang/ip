@@ -1,5 +1,6 @@
 package glendon;
 
+import java.util.List;
 import java.util.Scanner;
 
 import glendon.task.Task;
@@ -14,7 +15,8 @@ public class Glendon {
         DELETE("delete"),
         TODO("todo"),
         DEADLINE("deadline"),
-        EVENT("event");
+        EVENT("event"),
+        FIND("find");
 
         public final String keyword;
 
@@ -40,6 +42,7 @@ public class Glendon {
 
     /**
      * Reads user commands and executes responses.
+     *
      * @throws GlendonException
      */
     public void run() throws GlendonException {
@@ -57,33 +60,36 @@ public class Glendon {
 
             try {
                 switch (command) {
-                    case BYE:
-                        Ui.exit();
-                        scanner.close();
-                        return;
-                    case LIST:
-                        handleListTasks();
-                        break;
-                    case MARK:
-                        handleMarkTask(Parser.parseIndex(input));
-                        saveTasks();
-                        break;
-                    case UNMARK:
-                        handleUnmarkTask(Parser.parseIndex(input));
-                        saveTasks();
-                        break;
-                    case DELETE:
-                        handleDeleteTask(Parser.parseIndex(input));
-                        saveTasks();
-                        break;
-                    case TODO:
-                    case DEADLINE:
-                    case EVENT:
-                        handleAddTask(Parser.parseTask(input));
-                        saveTasks();
-                        break;
-                    default:
-                        Ui.displayUnknown();
+                case BYE:
+                    Ui.exit();
+                    scanner.close();
+                    return;
+                case LIST:
+                    handleListTasks();
+                    break;
+                case MARK:
+                    handleMarkTask(Parser.parseIndex(input));
+                    saveTasks();
+                    break;
+                case UNMARK:
+                    handleUnmarkTask(Parser.parseIndex(input));
+                    saveTasks();
+                    break;
+                case DELETE:
+                    handleDeleteTask(Parser.parseIndex(input));
+                    saveTasks();
+                    break;
+                case TODO:
+                case DEADLINE:
+                case EVENT:
+                    handleAddTask(Parser.parseTask(input));
+                    saveTasks();
+                    break;
+                case FIND:
+                    handleFindTask(Parser.parseSearchKey(input));
+                    break;
+                default:
+                    Ui.displayUnknown();
                 }
             } catch (GlendonException e) {
                 Ui.display(e.getMessage());
@@ -112,7 +118,23 @@ public class Glendon {
     }
 
     /**
+     * Searches the task list for tasks whose description contains the given keyword, then prints those tasks.
+     *
+     * @param keyword The keyword to search for.
+     */
+    private void handleFindTask(String keyword) {
+        List<Task> results = this.taskList.findTask(keyword);
+        if (results.isEmpty()) {
+            Ui.display("No matches found");
+            return;
+        }
+        Ui.display("Here are the matching tasks in your list:");
+        Ui.displayTasks(results);
+    }
+
+    /**
      * Marks the specified task as done.
+     *
      * @param index The display index of the task to be marked.
      */
     private void handleMarkTask(int index) {
@@ -122,6 +144,7 @@ public class Glendon {
 
     /**
      * Marks the specified task as not done.
+     *
      * @param index The display index of the task to be unmarked.
      */
     private void handleUnmarkTask(int index) {
@@ -131,6 +154,7 @@ public class Glendon {
 
     /**
      * Deletes the specified task from the task list.
+     *
      * @param index The display index of the task to be deleted.
      */
     private void handleDeleteTask(int index) {

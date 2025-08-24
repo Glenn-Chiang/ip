@@ -36,7 +36,19 @@ public class Parser {
     }
 
     /**
+     * Parses and returns the search key from the input string for a FIND command.
+     *
+     * @param input The full user input.
+     * @return The search key, which can be any number of words.
+     */
+    public static String parseSearchKey(String input) {
+        String[] segments = input.split(" ");
+        return String.join(" ", Arrays.copyOfRange(segments, 1, segments.length));
+    }
+
+    /**
      * Parses the input string into a Task and returns the Task.
+     *
      * @throws GlendonException If input is invalid.
      */
     public static Task parseTask(String input) throws GlendonException {
@@ -45,47 +57,47 @@ public class Parser {
         String description;
         String[] segments;
         switch (taskType) {
-            case "todo":
-                if (!validateTodoInput(input)) {
-                    throw new GlendonException("Invalid todo format");
-                }
-                segments = input.split(" ");
-                description = String.join(" ",
-                        Arrays.copyOfRange(input.split(" "), 1, segments.length));
-                task = new ToDo(description);
-                break;
-            case "deadline":
-                if (!validateDeadlineInput(input)) {
-                    throw new GlendonException("Invalid deadline format");
-                }
-                segments = input.split("\\s*(deadline |/by )\\s*");
-                description = segments[1];
-                String dateStr = segments[2];
-                try {
-                    LocalDate date = LocalDate.parse(dateStr, dateFormat);
-                    task = new Deadline(description, date);
-                } catch (DateTimeParseException e) {
-                    throw new GlendonException("Invalid deadline date format");
-                }
-                break;
-            case "event":
-                if (!validateEventInput(input)) {
-                    throw new GlendonException("Invalid event format");
-                }
-                segments = input.split("\\s*(event |/from |/to )\\s*");
-                description = segments[1];
-                String startStr = segments[2];
-                String endStr = segments[3];
-                try {
-                    LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
-                    LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
-                    task = new Event(description, start, end);
-                } catch (DateTimeParseException e) {
-                    throw new GlendonException("Invalid event start or end datetime format");
-                }
-                break;
-            default:
-                throw new GlendonException("Invalid task format");
+        case "todo":
+            if (!validateTodoInput(input)) {
+                throw new GlendonException("Invalid todo format");
+            }
+            segments = input.split(" ");
+            description = String.join(" ",
+                    Arrays.copyOfRange(input.split(" "), 1, segments.length));
+            task = new ToDo(description);
+            break;
+        case "deadline":
+            if (!validateDeadlineInput(input)) {
+                throw new GlendonException("Invalid deadline format");
+            }
+            segments = input.split("\\s*(deadline |/by )\\s*");
+            description = segments[1];
+            String dateStr = segments[2];
+            try {
+                LocalDate date = LocalDate.parse(dateStr, dateFormat);
+                task = new Deadline(description, date);
+            } catch (DateTimeParseException e) {
+                throw new GlendonException("Invalid deadline date format");
+            }
+            break;
+        case "event":
+            if (!validateEventInput(input)) {
+                throw new GlendonException("Invalid event format");
+            }
+            segments = input.split("\\s*(event |/from |/to )\\s*");
+            description = segments[1];
+            String startStr = segments[2];
+            String endStr = segments[3];
+            try {
+                LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
+                LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
+                task = new Event(description, start, end);
+            } catch (DateTimeParseException e) {
+                throw new GlendonException("Invalid event start or end datetime format");
+            }
+            break;
+        default:
+            throw new GlendonException("Invalid task format");
         }
         return task;
     }
