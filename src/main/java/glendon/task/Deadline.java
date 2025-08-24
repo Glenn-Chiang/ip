@@ -28,7 +28,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public String toPersistenceString() {
-        return Storage.stringifyDeadline(this);
+    public String toStorageString() {
+        return Storage.serializeDeadline(this);
     }
 }

@@ -1,7 +1,5 @@
 package glendon.task;
 
-import glendon.GlendonException;
-
 public abstract class Task {
     private final String description;
     private boolean isDone;
@@ -35,5 +33,5 @@ public abstract class Task {
         return "[" + this.getStatusIcon() + "] " + this.description;
     }
 
-    public abstract String toPersistenceString();
+    public abstract String toStorageString();
 }

@@ -14,7 +14,7 @@ public class ToDo extends Task {
     }
 
     @Override
-    public String toPersistenceString() {
-        return Storage.stringifyTodo(this);
+    public String toStorageString() {
+        return Storage.serializeTodo(this);
     }
 }
