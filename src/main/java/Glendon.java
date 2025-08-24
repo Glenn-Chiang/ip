@@ -30,44 +30,42 @@ public class Glendon {
         try {
             this.taskList = new TaskList(this.storage.loadTasks());
         } catch (GlendonException err) {
-            System.out.println("Error loading tasks. Using empty task list.");
+            Ui.displayLoadingError();
             this.taskList = new TaskList();
         }
     }
 
     public void run() throws GlendonException {
+        Ui.intro(Glendon.name);
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Hello! I'm " + Glendon.name);
-        System.out.println("What can I do for you?");
 
         while (true) {
             String input = scanner.nextLine();
             Command command = Parser.parseCommand(input);
 
             if (command == null) {
-                System.out.println("Unknown command");
+                Ui.displayUnknown();
                 continue;
             }
 
             switch (command) {
             case BYE:
-                System.out.println("Bye. Hope to see you again soon!");
+                Ui.exit();
                 scanner.close();
                 return;
             case LIST:
-                handleList();
+                handleListTasks();
                 break;
             case MARK:
-                handleMark(Parser.parseIndex(input));
+                handleMarkTask(Parser.parseIndex(input));
                 saveTasks();
                 break;
             case UNMARK:
-                handleUnmark(Parser.parseIndex(input));
+                handleUnmarkTask(Parser.parseIndex(input));
                 saveTasks();
                 break;
             case DELETE:
-                handleDelete(Parser.parseIndex(input));
+                handleDeleteTask(Parser.parseIndex(input));
                 saveTasks();
                 break;
             case TODO:
@@ -77,7 +75,7 @@ public class Glendon {
                 saveTasks();
                 break;
             default:
-                System.out.println("Unknown command");
+                Ui.displayUnknown();
             }
         }
     }
@@ -90,33 +88,27 @@ public class Glendon {
         this.storage.saveTasks(this.taskList.getTasks());
     }
 
-    private void handleList() {
-        this.taskList.list();
+    private void handleListTasks() {
+        Ui.displayTasks(this.taskList.getTasks());
     }
 
-    private void handleMark(int index) {
+    private void handleMarkTask(int index) {
         Task task = this.taskList.markTask(index);
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println(task);
+        Ui.displayTaskMarked(task);
     }
 
-    private void handleUnmark(int index) {
+    private void handleUnmarkTask(int index) {
         Task task = this.taskList.unmarkTask(index);
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println(task);
+        Ui.displayTaskUnmarked(task);
     }
 
-    private void handleDelete(int index) {
+    private void handleDeleteTask(int index) {
         Task deletedTask = this.taskList.deleteTask(index);
-        System.out.println("Noted. I've removed this task:");
-        System.out.println(deletedTask);
-        System.out.println("Now you have " + this.taskList.getCount() + " tasks in the list.");
+        Ui.displayTaskDeleted(deletedTask, this.taskList.getTasks());
     }
 
     private void handleAddTask(Task task) {
         this.taskList.addTask(task);
-        System.out.println("Got it. I've added this task:");
-        System.out.println(task);
-        System.out.println("Now you have " + this.taskList.getCount() + " tasks in the list.");
+        Ui.displayTaskAdded(task, this.taskList.getTasks());
     }
 }

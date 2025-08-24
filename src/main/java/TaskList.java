@@ -24,13 +24,6 @@ public class TaskList {
         this.tasks.add(task);
     }
 
-    public void list() {
-        for (int i = 0; i < this.tasks.size(); i++) {
-            Task task = this.tasks.get(i);
-            System.out.println((i + 1) + "." + task);
-        }
-    }
-
     public Task markTask(int index) {
         Task task = this.tasks.get(index);
         task.mark();
