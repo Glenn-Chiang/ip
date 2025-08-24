@@ -1,8 +1,8 @@
 package glendon;
 
-import glendon.task.Task;
-
 import java.util.List;
+
+import glendon.task.Task;
 
 public class Ui {
     public static void intro(String name) {
@@ -17,6 +17,7 @@ public class Ui {
     public static void display(String message) {
         System.out.println(message);
     }
+
     public static void displayUnknown() {
         System.out.println("Unknown command");
     }

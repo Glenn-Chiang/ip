@@ -1,10 +1,5 @@
 package glendon;
 
-import glendon.task.Deadline;
-import glendon.task.Event;
-import glendon.task.Task;
-import glendon.task.ToDo;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -17,6 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import glendon.task.Deadline;
+import glendon.task.Event;
+import glendon.task.Task;
+import glendon.task.ToDo;
 
 public class Storage {
     private final String dataPath;
@@ -56,26 +56,26 @@ public class Storage {
 
         Task task = null;
         switch (components.length) {
-        case 3:
-            // Todo
-            task = new ToDo(description);
-            break;
-        case 4:
-            // glendon.task.Deadline
-            String dateStr = components[3];
-            LocalDate date = LocalDate.parse(dateStr, dateFormat);
-            task = new Deadline(description, date);
-            break;
-        case 5:
-            // glendon.task.Event
-            String startStr = components[3];
-            String endStr = components[4];
-            LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
-            LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
-            task = new Event(description, start, end);
-            break;
-        default:
-            throw new GlendonException("Malformed task");
+            case 3:
+                // Todo
+                task = new ToDo(description);
+                break;
+            case 4:
+                // glendon.task.Deadline
+                String dateStr = components[3];
+                LocalDate date = LocalDate.parse(dateStr, dateFormat);
+                task = new Deadline(description, date);
+                break;
+            case 5:
+                // glendon.task.Event
+                String startStr = components[3];
+                String endStr = components[4];
+                LocalDateTime start = LocalDateTime.parse(startStr, dateTimeFormat);
+                LocalDateTime end = LocalDateTime.parse(endStr, dateTimeFormat);
+                task = new Event(description, start, end);
+                break;
+            default:
+                throw new GlendonException("Malformed task");
         }
         if (status.equals("1")) {
             task.mark();
