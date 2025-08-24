@@ -5,7 +5,6 @@ import glendon.task.Task;
 import java.util.Scanner;
 
 public class Glendon {
-    private static final String name = "glendon.Glendon";
 
     public enum Command {
         BYE("bye"),
@@ -40,7 +39,7 @@ public class Glendon {
     }
 
     public void run() throws GlendonException {
-        Ui.intro(Glendon.name);
+        Ui.intro("Glendon");
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
