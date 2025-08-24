@@ -14,6 +14,9 @@ public class Ui {
         System.out.println("Bye. Hope to see you again soon!");
     }
 
+    public static void display(String message) {
+        System.out.println(message);
+    }
     public static void displayUnknown() {
         System.out.println("Unknown command");
     }
