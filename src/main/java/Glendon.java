@@ -32,15 +32,15 @@ public class Glendon {
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private final Storage storage;
-    private List<Task> tasks;
+    private TaskList taskList;
 
     public Glendon(String storagePath) {
         storage = new Storage(storagePath);
         try {
-            this.tasks = this.storage.loadTasks();
+            this.taskList = new TaskList(this.storage.loadTasks());
         } catch (GlendonException err) {
             System.out.println("Error loading tasks. Using empty task list.");
-            this.tasks = new ArrayList<>();
+            this.taskList = new TaskList();
         }
     }
 
@@ -100,45 +100,39 @@ public class Glendon {
     }
 
     private void saveTasks() throws GlendonException {
-        this.storage.saveTasks(this.tasks);
+        this.storage.saveTasks(this.taskList.getTasks());
     }
 
     private void handleList() {
-        for (int i = 0; i < this.tasks.size(); i++) {
-            Task task = this.tasks.get(i);
-            System.out.println((i + 1) + "." + task);
-        }
+        this.taskList.list();
     }
 
     private void handleMark(int index) {
-        Task task = this.tasks.get(index);
-        task.mark();
+        Task task = this.taskList.markTask(index);
         System.out.println("Nice! I've marked this task as done:");
         System.out.println(task);
     }
 
     private void handleUnmark(int index) {
-        Task task = this.tasks.get(index);
-        task.unmark();
+        Task task = this.taskList.unmarkTask(index);
         System.out.println("OK, I've marked this task as not done yet:");
         System.out.println(task);
     }
 
     private void handleDelete(int index) {
-        Task deletedTask = this.tasks.get(index);
-        this.tasks.remove(index);
+        Task deletedTask = this.taskList.deleteTask(index);
         System.out.println("Noted. I've removed this task:");
         System.out.println(deletedTask);
-        System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
+        System.out.println("Now you have " + this.taskList.getCount() + " tasks in the list.");
     }
 
     private void handleAddTask(String input) throws GlendonException {
         try {
             Task task = taskFromString(input);
-            this.tasks.add(task);
+            this.taskList.addTask(task);
             System.out.println("Got it. I've added this task:");
             System.out.println(task);
-            System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
+            System.out.println("Now you have " + this.taskList.getCount() + " tasks in the list.");
         } catch (GlendonException e) {
             System.out.println(e.toString());
         }
