@@ -1,13 +1,14 @@
 package glendon.task;
 
-import glendon.GlendonException;
-import glendon.Storage;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import glendon.GlendonException;
+import glendon.Storage;
+
 public class Deadline extends Task {
     private final LocalDate date;
+
     public Deadline(String description, LocalDate date) throws GlendonException {
         super(description);
         this.date = date;

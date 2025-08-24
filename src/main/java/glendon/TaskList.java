@@ -1,9 +1,9 @@
 package glendon;
 
-import glendon.task.Task;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import glendon.task.Task;
 
 public class TaskList {
     private final List<Task> tasks;

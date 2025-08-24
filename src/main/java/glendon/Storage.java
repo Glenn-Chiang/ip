@@ -1,10 +1,5 @@
 package glendon;
 
-import glendon.task.Deadline;
-import glendon.task.Event;
-import glendon.task.Task;
-import glendon.task.ToDo;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -17,6 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import glendon.task.Deadline;
+import glendon.task.Event;
+import glendon.task.Task;
+import glendon.task.ToDo;
 
 public class Storage {
     private final String dataPath;

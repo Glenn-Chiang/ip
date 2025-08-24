@@ -1,16 +1,16 @@
 package glendon;
 
-import glendon.task.Deadline;
-import glendon.task.Event;
-import glendon.task.ToDo;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
+
+import glendon.task.Deadline;
+import glendon.task.Event;
+import glendon.task.ToDo;
 
 public class StorageTest {
     @Test

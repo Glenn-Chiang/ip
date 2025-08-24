@@ -1,10 +1,10 @@
 package glendon.task;
 
-import glendon.GlendonException;
-import glendon.Storage;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import glendon.GlendonException;
+import glendon.Storage;
 
 public class Event extends Task {
     private final LocalDateTime start;

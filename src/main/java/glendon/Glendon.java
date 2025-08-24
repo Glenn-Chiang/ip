@@ -1,8 +1,8 @@
 package glendon;
 
-import glendon.task.Task;
-
 import java.util.Scanner;
+
+import glendon.task.Task;
 
 public class Glendon {
 
@@ -57,33 +57,33 @@ public class Glendon {
 
             try {
                 switch (command) {
-                case BYE:
-                    Ui.exit();
-                    scanner.close();
-                    return;
-                case LIST:
-                    handleListTasks();
-                    break;
-                case MARK:
-                    handleMarkTask(Parser.parseIndex(input));
-                    saveTasks();
-                    break;
-                case UNMARK:
-                    handleUnmarkTask(Parser.parseIndex(input));
-                    saveTasks();
-                    break;
-                case DELETE:
-                    handleDeleteTask(Parser.parseIndex(input));
-                    saveTasks();
-                    break;
-                case TODO:
-                case DEADLINE:
-                case EVENT:
-                    handleAddTask(Parser.parseTask(input));
-                    saveTasks();
-                    break;
-                default:
-                    Ui.displayUnknown();
+                    case BYE:
+                        Ui.exit();
+                        scanner.close();
+                        return;
+                    case LIST:
+                        handleListTasks();
+                        break;
+                    case MARK:
+                        handleMarkTask(Parser.parseIndex(input));
+                        saveTasks();
+                        break;
+                    case UNMARK:
+                        handleUnmarkTask(Parser.parseIndex(input));
+                        saveTasks();
+                        break;
+                    case DELETE:
+                        handleDeleteTask(Parser.parseIndex(input));
+                        saveTasks();
+                        break;
+                    case TODO:
+                    case DEADLINE:
+                    case EVENT:
+                        handleAddTask(Parser.parseTask(input));
+                        saveTasks();
+                        break;
+                    default:
+                        Ui.displayUnknown();
                 }
             } catch (GlendonException e) {
                 Ui.display(e.getMessage());
