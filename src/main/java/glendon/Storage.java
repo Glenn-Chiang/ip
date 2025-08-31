@@ -19,9 +19,9 @@ import glendon.task.Task;
 import glendon.task.ToDo;
 
 public class Storage {
-    private final String dataPath;
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private final String dataPath;
 
     public Storage(String dataPath) {
         this.dataPath = dataPath;
