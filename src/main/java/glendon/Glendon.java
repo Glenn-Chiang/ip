@@ -1,12 +1,13 @@
 package glendon;
 
 import java.util.List;
-import java.util.Scanner;
 
 import glendon.task.Task;
 
+/**
+ * Chatbot that manages tasks
+ */
 public class Glendon {
-
     public enum Command {
         BYE("bye"),
         LIST("list"),
@@ -25,80 +26,70 @@ public class Glendon {
         }
     }
 
-    private static final String tasksDataPath = "./data/tasks.txt";
-
     private final Storage storage;
     private TaskList taskList;
 
-    public Glendon(String storagePath) {
+    public Glendon(String storagePath) throws GlendonException {
         storage = new Storage(storagePath);
-        try {
-            this.taskList = new TaskList(this.storage.loadTasks());
-        } catch (GlendonException err) {
-            Ui.displayLoadingError();
-            this.taskList = new TaskList();
-        }
+        this.taskList = new TaskList(this.storage.loadTasks());
+    }
+
+    /**
+     * Returns greeting message
+     */
+    public String getGreeting() {
+        return "Hello! I'm Glendon. What can I do for you?";
     }
 
     /**
      * Reads user commands and executes responses.
-     *
-     * @throws GlendonException
      */
-    public void run() throws GlendonException {
-        Ui.intro("Glendon");
-        Scanner scanner = new Scanner(System.in);
+    public String getResponse(String input) {
+        Command command = Parser.parseCommand(input);
 
-        while (true) {
-            String input = scanner.nextLine();
-            Command command = Parser.parseCommand(input);
-
-            if (command == null) {
-                Ui.displayUnknown();
-                continue;
-            }
-
-            try {
-                switch (command) {
-                case BYE:
-                    Ui.exit();
-                    scanner.close();
-                    return;
-                case LIST:
-                    handleListTasks();
-                    break;
-                case MARK:
-                    handleMarkTask(Parser.parseIndex(input));
-                    saveTasks();
-                    break;
-                case UNMARK:
-                    handleUnmarkTask(Parser.parseIndex(input));
-                    saveTasks();
-                    break;
-                case DELETE:
-                    handleDeleteTask(Parser.parseIndex(input));
-                    saveTasks();
-                    break;
-                case TODO:
-                case DEADLINE:
-                case EVENT:
-                    handleAddTask(Parser.parseTask(input));
-                    saveTasks();
-                    break;
-                case FIND:
-                    handleFindTask(Parser.parseSearchKey(input));
-                    break;
-                default:
-                    Ui.displayUnknown();
-                }
-            } catch (GlendonException e) {
-                Ui.display(e.getMessage());
-            }
+        if (command == null) {
+            return "Unknown command";
         }
-    }
 
-    public static void main(String[] args) throws GlendonException {
-        new Glendon(tasksDataPath).run();
+        String response = null;
+
+        try {
+            switch (command) {
+            case BYE:
+                response = "Bye. Hope to see you again soon!";
+                break;
+            case LIST:
+                response = handleListTasks();
+                break;
+            case MARK:
+                response = handleMarkTask(Parser.parseIndex(input));
+                saveTasks();
+                break;
+            case UNMARK:
+                response = handleUnmarkTask(Parser.parseIndex(input));
+                saveTasks();
+                break;
+            case DELETE:
+                response = handleDeleteTask(Parser.parseIndex(input));
+                saveTasks();
+                break;
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                response = handleAddTask(Parser.parseTask(input));
+                saveTasks();
+                break;
+            case FIND:
+                response = handleFindTask(Parser.parseSearchKey(input));
+                break;
+            default:
+                response = "Unknown command";
+            }
+        } catch (GlendonException e) {
+            response = e.getMessage();
+        }
+
+        return response;
     }
 
     /**
@@ -113,8 +104,14 @@ public class Glendon {
     /**
      * Displays list of tasks.
      */
-    private void handleListTasks() {
-        Ui.displayTasks(this.taskList.getTasks());
+    private String handleListTasks() {
+        List<Task> tasks = this.taskList.getTasks();
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            res.append((i + 1)).append(".").append(task).append("\n");
+        }
+        return res.toString();
     }
 
     /**
@@ -122,14 +119,12 @@ public class Glendon {
      *
      * @param keyword The keyword to search for.
      */
-    private void handleFindTask(String keyword) {
+    private String handleFindTask(String keyword) {
         List<Task> results = this.taskList.findTask(keyword);
         if (results.isEmpty()) {
-            Ui.display("No matches found");
-            return;
+            return "No matches found";
         }
-        Ui.display("Here are the matching tasks in your list:");
-        Ui.displayTasks(results);
+        return "Here are the matching tasks in your list:\n" + results;
     }
 
     /**
@@ -137,9 +132,9 @@ public class Glendon {
      *
      * @param index The display index of the task to be marked.
      */
-    private void handleMarkTask(int index) {
+    private String handleMarkTask(int index) {
         Task task = this.taskList.markTask(index);
-        Ui.displayTaskMarked(task);
+        return "Nice! I've marked this task as done:\n" + task;
     }
 
     /**
@@ -147,9 +142,9 @@ public class Glendon {
      *
      * @param index The display index of the task to be unmarked.
      */
-    private void handleUnmarkTask(int index) {
+    private String handleUnmarkTask(int index) {
         Task task = this.taskList.unmarkTask(index);
-        Ui.displayTaskUnmarked(task);
+        return "OK, I've marked this task as not done yet:\n" + task;
     }
 
     /**
@@ -157,16 +152,18 @@ public class Glendon {
      *
      * @param index The display index of the task to be deleted.
      */
-    private void handleDeleteTask(int index) {
+    private String handleDeleteTask(int index) {
         Task deletedTask = this.taskList.deleteTask(index);
-        Ui.displayTaskDeleted(deletedTask, this.taskList.getTasks());
+        return "Noted. I've removed this task:\n" + deletedTask
+                + "\nNow you have " + this.taskList.getCount() + " tasks in the list.";
     }
 
     /**
      * Adds the given task to the task list.
      */
-    private void handleAddTask(Task task) {
+    private String handleAddTask(Task task) {
         this.taskList.addTask(task);
-        Ui.displayTaskAdded(task, this.taskList.getTasks());
+        return "Got it. I've added this task:\n" + task
+                + "\nNow you have " + this.taskList.getCount() + " tasks in the list.";
     }
 }
