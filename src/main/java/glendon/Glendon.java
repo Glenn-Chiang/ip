@@ -56,7 +56,7 @@ public class Glendon {
         try {
             switch (command) {
             case BYE:
-                response = "Bye. Hope to see you again soon!";
+                System.exit(0);
                 break;
             case LIST:
                 response = handleListTasks();
