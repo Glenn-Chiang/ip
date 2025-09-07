@@ -46,10 +46,22 @@ public class DialogBox extends HBox {
         setAlignment(Pos.TOP_LEFT);
     }
 
+    /**
+     * Returns right-aligned DialogBox for user messages.
+     * @param text User message.
+     * @param img User avatar.
+     * @return
+     */
     public static DialogBox getUserDialog(String text, Image img) {
         return new DialogBox(text, img);
     }
 
+    /**
+     * Returns left-aligned DialogBox for Glendon responses.
+     * @param text Glendon response.
+     * @param img Glendon avatar.
+     * @return
+     */
     public static DialogBox getGlendonDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();

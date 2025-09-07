@@ -29,6 +29,9 @@ public class Glendon {
     private final Storage storage;
     private TaskList taskList;
 
+    private static final String greetingMessage = "Hello! I'm Glendon. What can I do for you?";
+    private static final String unknownCommandMessage = "Unknown command";
+
     public Glendon(String storagePath) throws GlendonException {
         storage = new Storage(storagePath);
         this.taskList = new TaskList(this.storage.loadTasks());
@@ -38,7 +41,7 @@ public class Glendon {
      * Returns greeting message
      */
     public String getGreeting() {
-        return "Hello! I'm Glendon. What can I do for you?";
+        return greetingMessage;
     }
 
     /**
@@ -48,7 +51,7 @@ public class Glendon {
         Command command = Parser.parseCommand(input);
 
         if (command == null) {
-            return "Unknown command";
+            return unknownCommandMessage;
         }
 
         String response = null;
@@ -83,7 +86,7 @@ public class Glendon {
                 response = handleFindTask(Parser.parseSearchKey(input));
                 break;
             default:
-                response = "Unknown command";
+                response = unknownCommandMessage;
             }
         } catch (GlendonException e) {
             response = e.getMessage();
