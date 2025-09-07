@@ -8,10 +8,6 @@ import glendon.task.Task;
 public class TaskList {
     private final List<Task> tasks;
 
-    public TaskList() {
-        this(new ArrayList<>());
-    }
-
     public TaskList(List<Task> tasks) {
         this.tasks = tasks;
     }

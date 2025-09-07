@@ -42,17 +42,13 @@ public class Storage {
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNext()) {
                 String taskStr = scanner.nextLine();
-                try {
-                    Task task = taskFromString(taskStr);
-                    tasks.add(task);
-                } catch (GlendonException err) {
-                    throw new GlendonException("Error reading malformed task from file: " + err);
-                }
+                Task task = taskFromString(taskStr);
+                tasks.add(task);
             }
-            return tasks;
-        } catch (FileNotFoundException err) {
-            throw new GlendonException(err.toString());
+        } catch (FileNotFoundException e) {
+            throw new GlendonException("Storage file not found: " + e);
         }
+        return tasks;
     }
 
     /**
@@ -66,7 +62,7 @@ public class Storage {
         String status = components[1];
         String description = components[2];
 
-        Task task = null;
+        Task task;
         switch (components.length) {
         case 3:
             // Todo
@@ -92,7 +88,7 @@ public class Storage {
         if (status.equals("1")) {
             task.mark();
         } else if (!status.equals("0")) {
-            throw new GlendonException("Invalid status");
+            throw new GlendonException("Invalid task status");
         }
         return task;
     }
@@ -107,13 +103,12 @@ public class Storage {
         Path path = Path.of(dataPath);
         try {
             Files.createDirectories(path.getParent());
-            try (FileWriter writer = new FileWriter(path.toFile())) {
-                int numTasks = tasks.size();
-                for (int i = 0; i < numTasks; i++) {
-                    writer.write(tasks.get(i).toStorageString());
-                    if (i < numTasks - 1) {
-                        writer.write(System.lineSeparator());
-                    }
+            FileWriter writer = new FileWriter(path.toFile());
+            int numTasks = tasks.size();
+            for (int i = 0; i < numTasks; i++) {
+                writer.write(tasks.get(i).toStorageString());
+                if (i < numTasks - 1) {
+                    writer.write(System.lineSeparator());
                 }
             }
         } catch (IOException err) {
