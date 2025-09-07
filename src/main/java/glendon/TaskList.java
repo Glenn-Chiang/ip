@@ -70,12 +70,6 @@ public class TaskList {
      * @return The list of tasks whose description contains the given keyword.
      */
     public List<Task> findTask(String keyword) {
-        List<Task> results = new ArrayList<>();
-        for (Task task : this.tasks) {
-            if (task.getDescription().contains(keyword)) {
-                results.add(task);
-            }
-        }
-        return results;
+        return this.tasks.stream().filter(task -> task.getDescription().contains(keyword)).toList();
     }
 }
