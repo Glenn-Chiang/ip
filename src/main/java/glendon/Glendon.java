@@ -157,6 +157,7 @@ public class Glendon {
      */
     private String handleDeleteTask(int index) {
         Task deletedTask = this.taskList.deleteTask(index);
+        assert taskList.getCount() == taskList.getTasks().size() : "TaskList count mismatch after modification";
         return "Noted. I've removed this task:\n" + deletedTask
                 + "\nNow you have " + this.taskList.getCount() + " tasks in the list.";
     }
@@ -166,6 +167,7 @@ public class Glendon {
      */
     private String handleAddTask(Task task) {
         this.taskList.addTask(task);
+        assert taskList.getCount() == taskList.getTasks().size() : "TaskList count mismatch after modification";
         return "Got it. I've added this task:\n" + task
                 + "\nNow you have " + this.taskList.getCount() + " tasks in the list.";
     }
