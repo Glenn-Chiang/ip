@@ -3,6 +3,7 @@ package glendon;
 import java.util.ArrayList;
 import java.util.List;
 
+import glendon.task.Deadline;
 import glendon.task.Task;
 
 public class TaskList {
@@ -67,5 +68,18 @@ public class TaskList {
      */
     public List<Task> findTask(String keyword) {
         return this.tasks.stream().filter(task -> task.getDescription().contains(keyword)).toList();
+    }
+
+    /**
+     * Filters out deadlines from list of tasks and returns a sorted list of deadlines.
+     *
+     * @return The sorted list of deadlines.
+     */
+    public List<Deadline> sortDeadlines() {
+        return this.tasks.stream()
+                .filter(task -> task instanceof Deadline)
+                .map(task -> (Deadline) task)
+                .sorted()
+                .toList();
     }
 }

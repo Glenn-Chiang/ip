@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import glendon.GlendonException;
 import glendon.Storage;
 
-public class Deadline extends Task {
+public class Deadline extends Task implements Comparable<Deadline> {
     private final LocalDate date;
 
     public Deadline(String description, LocalDate date) throws GlendonException {
@@ -34,5 +34,13 @@ public class Deadline extends Task {
     @Override
     public String toStorageString() {
         return Storage.serializeDeadline(this);
+    }
+
+    /**
+     * Compares this deadline with another deadline using the date.
+     */
+    @Override
+    public int compareTo(Deadline other) {
+        return this.date.compareTo(other.date);
     }
 }

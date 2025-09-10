@@ -2,6 +2,7 @@ package glendon;
 
 import java.util.List;
 
+import glendon.task.Deadline;
 import glendon.task.Task;
 
 /**
@@ -17,7 +18,9 @@ public class Glendon {
         TODO("todo"),
         DEADLINE("deadline"),
         EVENT("event"),
-        FIND("find");
+        FIND("find"),
+
+        SORT_DEADLINES("sort_d");
 
         public final String keyword;
 
@@ -85,6 +88,9 @@ public class Glendon {
             case FIND:
                 response = handleFindTask(Parser.parseSearchKey(input));
                 break;
+            case SORT_DEADLINES:
+                response = handleSortDeadlines();
+                break;
             default:
                 response = unknownCommandMessage;
             }
@@ -96,16 +102,29 @@ public class Glendon {
     }
 
     /**
+     * Returns list of sorted deadlines as a formatted string.
+     */
+    private String handleSortDeadlines() {
+        List<Deadline> tasks = this.taskList.sortDeadlines();
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            res.append((i + 1)).append(".").append(task).append("\n");
+        }
+        return res.toString();
+    }
+
+    /**
      * Writes all tasks to storage file.
      *
-     * @throws GlendonException
+     * @throws GlendonException if IO error occurs
      */
     private void saveTasks() throws GlendonException {
         this.storage.saveTasks(this.taskList.getTasks());
     }
 
     /**
-     * Displays list of tasks.
+     * Returns list of tasks as a formatted string.
      */
     private String handleListTasks() {
         List<Task> tasks = this.taskList.getTasks();
