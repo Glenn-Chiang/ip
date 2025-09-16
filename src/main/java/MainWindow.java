@@ -23,8 +23,8 @@ public class MainWindow extends AnchorPane {
 
     private Glendon glendon;
 
-    private Image userAvatar = new Image(this.getClass().getResourceAsStream("/images/user.png"));
-    private Image glendonAvatar = new Image(this.getClass().getResourceAsStream("/images/glendon.png"));
+    private Image userAvatar = new Image(this.getClass().getResourceAsStream("/images/user.jpg"));
+    private Image glendonAvatar = new Image(this.getClass().getResourceAsStream("/images/glendon.jpg"));
 
     @FXML
     public void initialize() {
