@@ -25,7 +25,7 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #ff9cb4;
+    -fx-background-color: rgb(37, 150, 190);
     -fx-background-radius: 1em;
 }
 
