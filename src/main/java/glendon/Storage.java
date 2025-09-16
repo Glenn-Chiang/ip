@@ -103,12 +103,13 @@ public class Storage {
         Path path = Path.of(dataPath);
         try {
             Files.createDirectories(path.getParent());
-            FileWriter writer = new FileWriter(path.toFile());
-            int numTasks = tasks.size();
-            for (int i = 0; i < numTasks; i++) {
-                writer.write(tasks.get(i).toStorageString());
-                if (i < numTasks - 1) {
-                    writer.write(System.lineSeparator());
+            try (FileWriter writer = new FileWriter(path.toFile())) {
+                int numTasks = tasks.size();
+                for (int i = 0; i < numTasks; i++) {
+                    writer.write(tasks.get(i).toStorageString());
+                    if (i < numTasks - 1) {
+                        writer.write(System.lineSeparator());
+                    }
                 }
             }
         } catch (IOException err) {
