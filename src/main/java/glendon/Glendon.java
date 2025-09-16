@@ -128,6 +128,11 @@ public class Glendon {
      */
     private String handleListTasks() {
         List<Task> tasks = this.taskList.getTasks();
+
+        if (tasks.isEmpty()) {
+            return "No tasks have been added";
+        }
+
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);

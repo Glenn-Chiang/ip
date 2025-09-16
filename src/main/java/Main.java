@@ -19,14 +19,18 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
+            stage.setTitle("Glendon");
             glendon = new Glendon(dataPath);
+
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+
             MainWindow mainWindow = fxmlLoader.<MainWindow>getController();
             mainWindow.setGlendon(glendon);  // inject the Glendon instance
             mainWindow.sendGreeting();
+
             stage.show();
         } catch (IOException | GlendonException e) {
             e.printStackTrace();
