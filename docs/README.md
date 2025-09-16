@@ -5,6 +5,10 @@
 Blazingly fast CLI-based task manager chatbot for those who thrive in the terminal.
 
 # Quick Start
+1. Ensure you have Java 17 installed in your computer.
+2. Download the latest `.jar` file from [here](https://github.com/Glenn-Chiang/ip/releases/tag/A-Release).
+3. Navigate into the directory containing the `.jar` file.
+4. Run `java -jar glendon.jar` to start the application.
 
 # Features
 
