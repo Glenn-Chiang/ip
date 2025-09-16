@@ -1,30 +1,77 @@
-# Duke User Guide
+# Glendon User Guide
 
-// Update the title above to match the actual product name
+![representative screenshot](./Ui.png)
 
-// Product screenshot goes here
+Blazingly fast CLI-based task manager chatbot for those who thrive in the terminal.
 
-// Product intro goes here
+# Quick Start
 
-## Adding deadlines
+# Features
 
-// Describe the action and its outcome.
+## Adding tasks
+The user can add 3 types of tasks to the task list: Todos, Deadlines and Events.
 
-// Give examples of usage
+### Todo
+Command: `todo <description>`.  
+The description can contain multiple words.
 
-Example: `keyword (optional arguments)`
+Examples:  
+- `todo workout`
+- `todo play hollow knight silksong`
 
-// A description of the expected outcome goes here
+### Deadline
+Command: `deadline <description> /by <date>`  
+Date format: `yyyy-MM-dd`
 
-```
-expected output
-```
+Examples:
+- `deadline 2103t ip /by 2025-09-19`
+- `deadline ST2334 quiz /by 2025-09-18`
 
-## Feature ABC
+### Event
+Command: `event <description> /from <start-time> /to <end-time>`  
+Datetime format: `yyyy-MM-dd HHmm`
 
-// Feature details
+Examples:
+- `event cca session /from 2025-09-17 1500 /to 2025-09-17 1630`
+- `event recess week /from 2025-09-20 0000 /to 2025-09-28 2359`
 
+## Listing tasks: `list`
+Displays all tasks in the task list.  
 
-## Feature XYZ
+Command: `list`
 
-// Feature details
+## Finding tasks: `find`
+Finds tasks whose description contains any of the given keywords and displays all matching tasks.  
+
+Command: `find <keywords>`
+
+Examples: 
+- `find play`
+- `find hollow knight`
+- `find silksong`
+- `find silk`
+- `find song`
+- `find hollow knight silksong`
+- All the above inputs should display the task with description "play hollow knight silksong"
+
+## Marking/unmarking tasks: `mark`/`unmark`
+Mark/unmark a specified task as completed/not completed, using its displayed index.  
+
+Command: `mark <index>`
+
+Examples: 
+- `mark 1`
+- `unmark 2`
+
+## Deleting tasks: `delete`
+Delete a specified task using its displayed index.
+
+Command: `delete <index>`
+
+Example: `delete 2`
+
+## Saving data
+Glendon automatically saves the task list to `data/tasks.txt` whenever changes are made. 
+
+## Exiting the app
+Command: `bye`
