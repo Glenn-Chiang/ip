@@ -31,8 +31,16 @@ public class Parser {
      * Extracts and returns the specified index from the input string.
      * Commands MARK, UNMARK and DELETE require an index to be specified as the second argument in the input string.
      */
-    public static int parseIndex(String input) {
-        return Integer.parseInt(input.split(" ")[1]) - 1;
+    public static int parseIndex(String input) throws GlendonException {
+        String[] segments = input.split(" ");
+        if (segments.length < 2) {
+            throw new GlendonException("Index must be specified");
+        }
+        try {
+            return Integer.parseInt(segments[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new GlendonException("Index must be a number");
+        }
     }
 
     /**

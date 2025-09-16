@@ -159,7 +159,7 @@ public class Glendon {
      *
      * @param index The display index of the task to be marked.
      */
-    private String handleMarkTask(int index) {
+    private String handleMarkTask(int index) throws GlendonException {
         Task task = this.taskList.markTask(index);
         return "Nice! I've marked this task as done:\n" + task;
     }
@@ -169,7 +169,7 @@ public class Glendon {
      *
      * @param index The display index of the task to be unmarked.
      */
-    private String handleUnmarkTask(int index) {
+    private String handleUnmarkTask(int index) throws GlendonException {
         Task task = this.taskList.unmarkTask(index);
         return "OK, I've marked this task as not done yet:\n" + task;
     }
@@ -179,7 +179,7 @@ public class Glendon {
      *
      * @param index The display index of the task to be deleted.
      */
-    private String handleDeleteTask(int index) {
+    private String handleDeleteTask(int index) throws GlendonException {
         Task deletedTask = this.taskList.deleteTask(index);
         assert taskList.getCount() == taskList.getTasks().size() : "TaskList count mismatch after modification";
         return "Noted. I've removed this task:\n" + deletedTask

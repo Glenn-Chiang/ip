@@ -31,10 +31,22 @@ public class TaskList {
     }
 
     /**
+     * Checks if given index is valid.
+     * @param index The index to check.
+     * @return Whether the given index is valid.
+     */
+    private boolean isValidIndex(int index) {
+        return index >= 0 && index < tasks.size();
+    }
+
+    /**
      * Marks the specified task as done.
      * @param index The display index of the task to be marked.
      */
-    public Task markTask(int index) {
+    public Task markTask(int index) throws GlendonException {
+        if (!isValidIndex(index)) {
+            throw new GlendonException("Invalid index");
+        }
         Task task = this.tasks.get(index);
         task.mark();
         return task;
@@ -44,7 +56,10 @@ public class TaskList {
      * Marks the specified task as not done.
      * @param index The display index of the task to be unmarked.
      */
-    public Task unmarkTask(int index) {
+    public Task unmarkTask(int index) throws GlendonException {
+        if (!isValidIndex(index)) {
+            throw new GlendonException("Invalid index");
+        }
         Task task = this.tasks.get(index);
         task.unmark();
         return task;
@@ -54,7 +69,10 @@ public class TaskList {
      * Deletes the specified task from the task list.
      * @param index The display index of the task to be deleted.
      */
-    public Task deleteTask(int index) {
+    public Task deleteTask(int index) throws GlendonException {
+        if (!isValidIndex(index)) {
+            throw new GlendonException("Invalid index");
+        }
         Task deletedTask = this.tasks.get(index);
         this.tasks.remove(index);
         return deletedTask;
