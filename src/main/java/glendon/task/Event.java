@@ -15,6 +15,10 @@ public class Event extends Task {
         super(description);
         this.start = start;
         this.end = end;
+
+        if (start.isAfter(end)) {
+            throw new GlendonException("Start time must be before end time");
+        }
     }
 
     public LocalDateTime getStart() {
