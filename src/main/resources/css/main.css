@@ -1,5 +1,5 @@
 .root {
-    main-color: #FAFAFA;       /* Create a looked-up color called "main-color" within root. */
+    main-color: #a8d5e5;       /* Create a looked-up color called "main-color" within root. */
     -fx-background-color: main-color;
 }
 
