@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import glendon.GlendonException;
 import glendon.Storage;
 
+/**
+ * A Task containing a date.
+ */
 public class Deadline extends Task implements Comparable<Deadline> {
     private final LocalDate date;
 

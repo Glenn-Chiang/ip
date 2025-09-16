@@ -12,6 +12,11 @@ import glendon.task.Event;
 import glendon.task.Task;
 import glendon.task.ToDo;
 
+/**
+ * Utility class that handles parsing of raw user input into commands, indices,
+ * search keys, and Task objects.
+ * Ensures validation of input formats and throws GlendonException for invalid cases.
+ */
 public class Parser {
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
@@ -114,14 +119,23 @@ public class Parser {
         return pattern.matcher(input).matches();
     }
 
+    /**
+     * Validates the format of a ToDo input string.
+     */
     private static boolean validateTodoInput(String input) {
         return validateInput(Pattern.compile("^todo\\s\\S.*$"), input);
     }
 
+    /**
+     * Validates the format of a Deadline input string.
+     */
     private static boolean validateDeadlineInput(String input) {
         return validateInput(Pattern.compile("^deadline\\s+\\S.*\\s+/by\\s+\\S.*$"), input);
     }
 
+    /**
+     * Validates the format of an Event input string.
+     */
     private static boolean validateEventInput(String input) {
         return validateInput(Pattern.compile("^event\\s+\\S.*\\s+/from\\s+\\S.*\\s+/to\\s+\\S.*$"), input);
     }

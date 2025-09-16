@@ -18,6 +18,9 @@ import glendon.task.Event;
 import glendon.task.Task;
 import glendon.task.ToDo;
 
+/**
+ * Handles persistent storage of tasks to and from a file.
+ */
 public class Storage {
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME;

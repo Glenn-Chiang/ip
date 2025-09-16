@@ -6,6 +6,9 @@ import java.util.List;
 import glendon.task.Deadline;
 import glendon.task.Task;
 
+/**
+ * Manages a collection of Task objects
+ */
 public class TaskList {
     private final List<Task> tasks;
 

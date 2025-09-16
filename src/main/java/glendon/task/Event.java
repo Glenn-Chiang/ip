@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import glendon.GlendonException;
 import glendon.Storage;
 
+/**
+ * A Task containing a start time and end time.
+ */
 public class Event extends Task {
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MMM d yyyy HHmm");
     private final LocalDateTime start;

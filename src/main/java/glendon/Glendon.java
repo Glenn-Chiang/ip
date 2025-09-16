@@ -48,7 +48,10 @@ public class Glendon {
     }
 
     /**
-     * Reads user commands and executes responses.
+     * Reads user commands and executes responses, then returns a response message.
+     *
+     * @param input The raw input entered by the user.
+     * @return The response message.
      */
     public String getResponse(String input) {
         Command command = Parser.parseCommand(input);
